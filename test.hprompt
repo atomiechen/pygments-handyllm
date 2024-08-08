@@ -1,0 +1,59 @@
+---
+description: hprompt frontmatter
+note: this should be in YAML format.
+key: value
+a:
+- 135
+- c
+d:
+	e: f
+	g: h
+---
+
+plain text here.
+
+$system$
+Message content in markdown format.
+
+$user$ { type = "content_array" a ="3"   b= "4"}
+description: message content
+note: this should be in YAML format
+key: value
+a:
+- 1
+- c
+d:
+	e: f
+	g: h
+
+$assistant$ { a ="3"   b= "4"}
+**NOTE**: this should be in markdown format.
+ordered list:
+1. asdf
+2. sdf
+unordered list:
+- 1
+- c
+
+inline code: `variable`
+
+multiline code block:
+
+```cpp
+#include <string>
+#include <iostream> // c++ single line comment
+/*
+c++ multiline comment
+*/
+```
+
+```python
+# python single line comment
+'''
+python multiline comment
+'''
+import handyllm
+```
+
+$user$ { }
+placeholder

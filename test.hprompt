@@ -6,8 +6,8 @@ a:
 - 135
 - c
 d:
-	e: f
-	g: h
+  e: f
+  g: h
 ---
 
 plain text here.
@@ -18,13 +18,15 @@ Message content in markdown format.
 $user$ { type = "content_array" a ="3"   b= "4"}
 description: message content
 note: this should be in YAML format
+variables: %variable1%, %variable2%
 key: value
 a:
 - 1
 - c
-d:
-	e: f
-	g: h
+- %variable3%
+%variable4%:
+  e: f
+  g: h
 
 $assistant$ { a ="3"   b= "4"}
 **NOTE**: this should be in markdown format.
@@ -56,4 +58,4 @@ import handyllm
 ```
 
 $user$ { }
-placeholder
+hprompt variables: %variable5%, %variable6%

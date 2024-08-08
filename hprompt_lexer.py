@@ -1,17 +1,13 @@
 import re
-from pygments.lexer import RegexLexer, bygroups, using
+from pygments.lexer import RegexLexer, bygroups, using, DelegatingLexer
 from pygments.token import (
-    Text, Name, String, Generic, Whitespace, Punctuation
+    Text, Name, String, Generic, Whitespace, Punctuation, Other
 )
 from pygments.lexers.data import YamlLexer
 from pygments.lexers.markup import MarkdownLexer
 
 
-class HpromptLexer(RegexLexer):
-    name = 'HandyPrompt'
-    aliases = ['hprompt']
-    filenames = ['*.hprompt', '*.hpr']
-
+class HpromptRootLexer(RegexLexer):
     # match line start and end using ^ and $, respectively
     # match any character including newline using .
     flags = re.MULTILINE | re.DOTALL
@@ -41,3 +37,25 @@ class HpromptLexer(RegexLexer):
             (r'(.*?)\Z', bygroups(using(MarkdownLexer)), '#pop'),
         ],
     }
+
+
+class HpromptVariableLexer(RegexLexer):
+    # match line start and end using ^ and $, respectively
+    # match any character including newline using .
+    flags = re.MULTILINE | re.DOTALL
+    tokens = {
+        'root': [
+            (r'%\w+%', Name.Variable),
+            (r'.', Other),
+        ],
+    }
+
+
+class HpromptLexer(DelegatingLexer):
+    name = 'HandyPrompt'
+    aliases = ['hprompt']
+    filenames = ['*.hprompt', '*.hpr']
+    
+    def __init__(self, **options):
+        super().__init__(HpromptRootLexer, HpromptVariableLexer, **options)
+

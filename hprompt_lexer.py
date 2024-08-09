@@ -1,7 +1,7 @@
 import re
 from pygments.lexer import RegexLexer, bygroups, using, DelegatingLexer
 from pygments.token import (
-    Text, Name, String, Generic, Whitespace, Punctuation, Other
+    Text, Name, String, Generic, Whitespace, Punctuation, Keyword, Other
 )
 from pygments.lexers.data import YamlLexer
 from pygments.lexers.markup import MarkdownLexer
@@ -17,6 +17,7 @@ class HpromptExtraProperties(RegexLexer):
             (r'\s+', Whitespace),
             (r'}', Punctuation, '#pop'),
             (r'(\w+)(\s*)(=)(\s*)("[^"]*"|\'[^\']*\')', bygroups(Name.Attribute, Whitespace, Punctuation, Whitespace, String)),
+            (r'(?<=\s|{)(tool|array)(?=\s|})', bygroups(Keyword.Type)),
         ],
     }
 
@@ -30,7 +31,7 @@ class HpromptRootLexer(RegexLexer):
         'root': [
             (r'(\A---\s*$)(.*?)(^---\s*$)', bygroups(String.Delimiter, using(YamlLexer), String.Delimiter)),
             (
-                r'^(\$\w+\$)(\s*)({[^{}]*?type\s*=[^{}]*})(\s*)$(.*?)((?=^\$\w+\$\s*({[^{}]*?})?\s*$)|\Z)', 
+                r'^(\$\w+\$)(\s*)({[^{}]*?(?:type\s*=|(?<=\s|{)(?:tool|array)(?=\s|}))[^{}]*})(\s*)$(.*?)((?=^\$\w+\$\s*({[^{}]*?})?\s*$)|\Z)', 
                 bygroups(Generic.Heading, Whitespace, using(HpromptExtraProperties), Whitespace, using(YamlLexer))
             ),
             (
